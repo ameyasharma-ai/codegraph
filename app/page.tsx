@@ -54,7 +54,7 @@ export default function Home() {
       
       <div className="pt-16 flex-1 flex flex-col min-h-0">
         {graphData.nodes.length > 0 ? (
-          <div className="flex-1 relative">
+          <div className="flex-1 relative h-[calc(100vh-64px)] md:h-auto">
              <CodeGraph 
               initialNodes={graphData.nodes} 
               initialEdges={graphData.edges}
@@ -73,7 +73,7 @@ export default function Home() {
                 AI-Powered Code Intelligence
               </div>
               
-              <h1 className="text-3xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.05] bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent px-2">
+              <h1 className="text-3xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.05] bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent px-2">
                 Visualize Your <br className="hidden md:block" />
                 <span className="text-indigo-500">Codebase</span> Like Never Before
               </h1>
