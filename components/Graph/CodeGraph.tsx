@@ -106,6 +106,8 @@ export default function CodeGraph({ initialNodes, initialEdges, onNodeClick }: C
         zoomOnPinch={true}
         zoomOnDoubleClick={true}
         preventScrolling={true}
+        minZoom={0.05} // Allow zooming out much further
+        maxZoom={4} // Allow zooming in closer
       >
         <Background color="#111" gap={20} />
         <Controls />
