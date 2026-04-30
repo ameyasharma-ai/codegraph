@@ -61,7 +61,7 @@ export default function SidePanel({ selectedNode, onClose, repoUrl }: SidePanelP
   if (!selectedNode) return null;
 
   return (
-    <div className="fixed top-20 right-6 bottom-6 w-[420px] bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl z-40 flex flex-col overflow-hidden animate-in slide-in-from-right duration-500 ease-out">
+    <div className="fixed top-20 right-0 sm:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto w-full sm:w-[420px] bg-black/60 sm:bg-black/40 backdrop-blur-3xl border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl shadow-2xl z-40 flex flex-col overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-right duration-500 ease-out">
       {/* Header */}
       <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
         <div className="flex items-center gap-4">
