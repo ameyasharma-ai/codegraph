@@ -48,13 +48,19 @@ export default function Home() {
     }
   };
 
+  const hasGraph = graphData.nodes.length > 0;
+
   return (
-    <main className="relative min-h-screen md:h-screen bg-[#050505] text-white overflow-y-auto md:overflow-hidden flex flex-col">
+    <main className={`relative bg-[#050505] text-white flex flex-col ${
+      hasGraph 
+        ? "h-screen overflow-hidden" 
+        : "min-h-screen overflow-y-auto md:h-screen md:overflow-hidden"
+    }`}>
       <Header onSearch={handleSearch} loading={loading} />
       
       <div className="pt-16 flex-1 flex flex-col min-h-0">
-        {graphData.nodes.length > 0 ? (
-          <div className="flex-1 relative h-[calc(100vh-64px)] md:h-auto">
+        {hasGraph ? (
+          <div className="flex-1 relative">
              <CodeGraph 
               initialNodes={graphData.nodes} 
               initialEdges={graphData.edges}
