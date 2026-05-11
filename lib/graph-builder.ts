@@ -4,6 +4,7 @@
  */
 
 import { normalizeImportPath } from "./parser";
+import dagre from "dagre";
 
 export interface Node {
   id: string;
@@ -30,30 +31,23 @@ export interface FileData {
 }
 
 /**
- * Builds a graph from a list of files and their imports.
+ * Builds a graph from a list of files and their imports using Dagre for layout.
  */
 export function buildGraph(files: FileData[]): GraphData {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   const filePaths = new Set(files.map(f => f.path));
 
-  // Create nodes with a simple grid layout initially
-  files.forEach((file, index) => {
+  // 1. Initialize Nodes and Edges
+  files.forEach((file) => {
     nodes.push({
       id: file.path,
       data: { label: file.path.split("/").pop() || file.path },
-      position: { 
-        x: (index % 10) * 250, 
-        y: Math.floor(index / 10) * 150 
-      },
+      position: { x: 0, y: 0 }, // Positions will be set by dagre
     });
 
-    // Create edges
     file.imports.forEach(impPath => {
       const normalizedTarget = normalizeImportPath(file.path, impPath);
-      
-      // We only want to create edges to files that are in our tree
-      // We check for extensions because imports often omit them
       const targetPath = findMatchingFile(normalizedTarget, filePaths);
 
       if (targetPath) {
@@ -65,6 +59,33 @@ export function buildGraph(files: FileData[]): GraphData {
         });
       }
     });
+  });
+
+  // 2. Apply Dagre Layout
+  const g = new dagre.graphlib.Graph();
+  g.setGraph({ rankdir: "LR", nodesep: 70, ranksep: 120 });
+  g.setDefaultEdgeLabel(() => ({}));
+
+  const nodeWidth = 200;
+  const nodeHeight = 60;
+
+  nodes.forEach(node => {
+    g.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+
+  edges.forEach(edge => {
+    g.setEdge(edge.source, edge.target);
+  });
+
+  dagre.layout(g);
+
+  // 3. Update node positions from dagre results
+  nodes.forEach(node => {
+    const dagreNode = g.node(node.id);
+    node.position = {
+      x: dagreNode.x - nodeWidth / 2,
+      y: dagreNode.y - nodeHeight / 2
+    };
   });
 
   return { nodes, edges };
