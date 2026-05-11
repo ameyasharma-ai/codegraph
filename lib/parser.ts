@@ -13,16 +13,21 @@ export interface FileImport {
  * Uses regex to find ES imports.
  */
 export function extractImports(code: string): string[] {
-  // Regex to match: import ... from "path" or import "path"
-  // Handles single quotes, double quotes, and template literals (though unlikely in imports)
-  const importRegex = /import\s+(?:(?:[\w*\s{},]*)\s+from\s+)?['"]([^'"]+)['"]/g;
+  // Regex to match: 
+  // 1. import ... from "path"
+  // 2. import "path"
+  // 3. export ... from "path"
+  // 4. require("path")
+  // 5. import("path")
+  const importRegex = /(?:import|export)\s+(?:(?:[\w*\s{},]*)\s+from\s+)?['"]([^'"]+)['"]|require\(['"]([^'"]+)['"]\)|import\(['"]([^'"]+)['"]\)/g;
   
   const imports: string[] = [];
   let match;
 
   while ((match = importRegex.exec(code)) !== null) {
-    if (match[1]) {
-      imports.push(match[1]);
+    const path = match[1] || match[2] || match[3];
+    if (path) {
+      imports.push(path);
     }
   }
 
@@ -37,6 +42,11 @@ export function extractImports(code: string): string[] {
  * returns: "src/utils"
  */
 export function normalizeImportPath(currentFile: string, importPath: string): string {
+  // Handle @/ alias mapping to root
+  if (importPath.startsWith("@/")) {
+    return importPath.replace("@/", "");
+  }
+
   // If it's not a relative path, return as is (could be a library or absolute)
   if (!importPath.startsWith(".")) {
     return importPath;

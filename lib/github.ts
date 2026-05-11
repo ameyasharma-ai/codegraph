@@ -72,7 +72,7 @@ export async function fetchRepoTree(owner: string, repo: string, token?: string)
 /**
  * Filter and limit files from the tree.
  */
-export function filterFiles(tree: GithubFile[], maxFiles = 150) {
+export function filterFiles(tree: GithubFile[], maxFiles = 300) {
   const validExtensions = [".js", ".ts", ".jsx", ".tsx"];
   
   return tree

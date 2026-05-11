@@ -50,11 +50,16 @@ export default function CodeGraph({ initialNodes, initialEdges, onNodeClick }: C
     
     connectedNodes.add(node.id);
 
-    // Find all edges connected to this node (outbound)
+    // Find all edges connected to this node (bidirectional)
     initialEdges.forEach(edge => {
       if (edge.source === node.id) {
+        // Outbound
         connectedEdges.add(edge.id);
         connectedNodes.add(edge.target);
+      } else if (edge.target === node.id) {
+        // Inbound
+        connectedEdges.add(edge.id);
+        connectedNodes.add(edge.source);
       }
     });
 
