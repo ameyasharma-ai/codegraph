@@ -105,8 +105,8 @@ export default function CodeGraph({ initialNodes, initialEdges, onNodeClick }: C
         onPaneClick={onPaneClick}
         fitView
         className="react-flow-dark"
-        panOnScroll={false}
-        panOnDrag={[1, 2]} // Support both mouse and touch drag
+        panOnScroll={true}
+        panOnDrag={true} 
         selectionOnDrag={false}
         zoomOnPinch={true}
         zoomOnDoubleClick={true}
