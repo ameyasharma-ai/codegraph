@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { parseGithubUrl, fetchRepoTree, filterFiles, fetchFileContent } from "@/lib/github";
+import { parseGithubUrl, fetchRepoTree, filterFiles, fetchFileContent, isTextFile } from "@/lib/github";
 import { extractImports } from "@/lib/parser";
 import { buildGraph } from "@/lib/graph-builder";
 import { supabase } from "@/lib/supabase";
@@ -49,9 +49,14 @@ export async function POST(request: Request) {
     const fileData = await Promise.all(
       files.map(async (file) => {
         try {
-          const content = await fetchFileContent(owner, repo, file.path, process.env.GITHUB_TOKEN);
-          const imports = extractImports(content);
-          return { path: file.path, imports };
+          // Only fetch and parse content if it's a text-based file
+          if (isTextFile(file.path)) {
+            const content = await fetchFileContent(owner, repo, file.path, process.env.GITHUB_TOKEN);
+            const imports = extractImports(content);
+            return { path: file.path, imports };
+          }
+          // For binary assets, just return the path with no imports
+          return { path: file.path, imports: [] };
         } catch (e) {
           console.error(`Failed to parse ${file.path}`, e);
           return { path: file.path, imports: [] };

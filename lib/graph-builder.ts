@@ -77,7 +77,7 @@ export function buildGraph(files: FileData[]): GraphData {
 function findMatchingFile(path: string, filePaths: Set<string>): string | null {
   if (filePaths.has(path)) return path;
   
-  const extensions = [".ts", ".tsx", ".js", ".jsx", "/index.ts", "/index.tsx", "/index.js", "/index.jsx"];
+  const extensions = [".ts", ".tsx", ".js", ".jsx", ".json", ".css", ".scss", ".less", "/index.ts", "/index.tsx", "/index.js", "/index.jsx"];
   
   for (const ext of extensions) {
     if (filePaths.has(path + ext)) return path + ext;

@@ -73,16 +73,40 @@ export async function fetchRepoTree(owner: string, repo: string, token?: string)
  * Filter and limit files from the tree.
  */
 export function filterFiles(tree: GithubFile[], maxFiles = 300) {
-  const validExtensions = [".js", ".ts", ".jsx", ".tsx"];
+  const validExtensions = [
+    // Logic
+    ".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs",
+    // Styles
+    ".css", ".scss", ".sass", ".less",
+    // Data/Config
+    ".json", ".yaml", ".yml", ".graphql",
+    // Assets
+    ".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico",
+    // Markup
+    ".html", ".md", ".mdx"
+  ];
   
   return tree
     .filter(file => 
       file.type === "blob" && 
-      validExtensions.some(ext => file.path.endsWith(ext)) &&
+      validExtensions.some(ext => file.path.toLowerCase().endsWith(ext)) &&
       !file.path.includes("node_modules") &&
       !file.path.startsWith(".")
     )
     .slice(0, maxFiles);
+}
+
+/**
+ * Returns true if the file is text-based and should be parsed for imports.
+ */
+export function isTextFile(path: string): boolean {
+  const textExtensions = [
+    ".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs",
+    ".css", ".scss", ".sass", ".less",
+    ".html", ".md", ".mdx", ".json", ".yaml", ".yml", ".graphql"
+  ];
+  const ext = path.toLowerCase().slice(path.lastIndexOf("."));
+  return textExtensions.includes(ext);
 }
 
 /**

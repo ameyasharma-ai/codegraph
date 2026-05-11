@@ -19,13 +19,14 @@ export function extractImports(code: string): string[] {
   // 3. export ... from "path"
   // 4. require("path")
   // 5. import("path")
-  const importRegex = /(?:import|export)\s+(?:(?:[\w*\s{},]*)\s+from\s+)?['"]([^'"]+)['"]|require\(['"]([^'"]+)['"]\)|import\(['"]([^'"]+)['"]\)/g;
+  // 6. @import "path" (for CSS)
+  const importRegex = /(?:import|export)\s+(?:(?:[\w*\s{},]*)\s+from\s+)?['"]([^'"]+)['"]|require\(['"]([^'"]+)['"]\)|import\(['"]([^'"]+)['"]\)|@import\s+['"]([^'"]+)['"]/g;
   
   const imports: string[] = [];
   let match;
 
   while ((match = importRegex.exec(code)) !== null) {
-    const path = match[1] || match[2] || match[3];
+    const path = match[1] || match[2] || match[3] || match[4];
     if (path) {
       imports.push(path);
     }
